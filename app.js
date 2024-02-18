@@ -20,49 +20,20 @@
 // console.log(os.arch());
 // console.log(os.release());
 
-// const EventEmitter = require("events");
+//
+const fs = require("fs");
+const readStream = fs.createReadStream("example.txt");
+let buffer = "";
 
-// function createRestaurant() {
-//   const eventEmitter = new EventEmitter();
-//   let isOpen = false;
+readStream.on("data", (chunk) => {
+  buffer += chunk;
+});
 
-//   function openRestaurant() {
-//     isOpen = true;
-//     console.log("Restaurant is open");
-//     eventEmitter.emit("restaurantOpen");
-//   }
-//   function closeRestaurant() {
-//     isOpen = false;
-//     console.log("Restaurant is closed");
-//     eventEmitter.emit("restaurantClosed");
-//   }
-//   function takeOrder(order) {
-//     if (isOpen) {
-//       console.log(`Order taken: ${order}`);
-//       eventEmitter.emit("orderTaken", order);
-//     } else {
-//       console.log("Sorry, restaurant is closed");
-//     }
-//   }
-//   return {
-//     openRestaurant,
-//     closeRestaurant,
-//     takeOrder,
-//     on: eventEmitter.on.bind(eventEmitter),
-//   };
-// }
+readStream.on("end", () => {
+  console.log("Data reading finished");
+  console.log(buffer);
+});
 
-// const myRestaurant = new createRestaurant();
-
-// myRestaurant.on("restaurantOpen", () => {
-//   console.log("Welcome! the restaurant is open");
-// });
-
-// myRestaurant.openRestaurant();
-
-// myRestaurant.on("Order taken", (order) => {
-//   console.log("Order recieved", order);
-//   console.log("Preparing your meal...");
-// });
-
-// myRestaurant.takeOrder("Pizza");
+readStream.on("error", (err) => {
+  console.log(err);
+});
